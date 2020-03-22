@@ -1,0 +1,329 @@
+{% extends 'html/base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/modal.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div class="hero mv-single-hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-single movie-single movie_single">
+        <div class="container">
+            <div class="row ipad-width2">
+                <div class="col-md-4 col-sm-12 col-xs-12">
+                    <div class="movie-img sticky-sb">
+                        <img src="/Media/{{ data.movie.5 }}" alt="">
+                    </div>
+                </div>
+
+                <div class="col-md-8 col-sm-12 col-xs-12">
+                    <div class="movie-single-ct main-content">
+                        <h1 class="bd-hd">{{ data.movie.1 }}&nbsp;<span>{{ data.movie.2|date:"Y" }}</span></h1>
+                        <div class="social-btn">
+                            {% ifequal fav 0 %}
+                            <a href= "#" class="parent-btn fav_add" style="color:yellow;">
+                                <i class="ion-heart "></i>Add to Favorite</a>
+                            {% else %}
+                            <a href= "#" class="parent-btn fav_del">
+                                <i class="ion-heart"></i>Added to Favorite</a>
+                            {% endifequal %}
+                            {% ifequal watchlist 0 %}
+                            <a href="#" class="parent-btn watch_add" style="color:yellow;"><i class="ion-clock"></i> Add to Watchlist</a>
+                            {% else %}
+                            <a href="#" class="parent-btn watch_del"><i class="ion-clock"></i> Added to Watchlist</a>
+                            {% endifequal %}
+                        </div>
+                        <div class="movie-rate">
+                            <div class="rate">
+                                <i class="ion-android-star"></i>
+                                <p><span>{{ data.movie.10 }}</span> /10<br>
+                                    <span class="rv">{{ reviews|length }} Reviews</span>
+                                </p>
+                            </div>
+                            <div class="rate-star">
+                                {% ifnotequal star_count 0 %}
+                                    <p>You Rated This : </p>
+                                    <span id="demo" data-stars="{{ star_ivd }}"></span>
+                                {% endifnotequal %}
+                                {% ifequal star_count 0 %}
+                                    <p>Rate This Movie: </p>
+                                    <span id="demo"></span>
+                                    <form name="myform" method="POST" onsubmit="DoSubmit();">
+                                        {% csrf_token %}
+                                        {{ ratingform.stars }}
+                                        <input type="submit">
+                                    </form>
+                                {% endifequal %}
+                                <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+                                <script src="{% static 'js/jquery-rate-picker.js' %}"></script>
+                                <script>
+                                    $.ratePicker("#demo", {
+                                        max: 10,
+                                        rgbOn: "yellow",
+                                        rgbOff: "white",
+                                        rgbSelection: "yellow",
+                                        cursor: "crosshair",
+                                        indicator: "fa-star",
+                                        rate: function (stars) {
+                                            document.getElementById('demo').setAttribute("data-stars", stars);
+                                        }
+                                    });
+
+                                    function DoSubmit() {
+                                        document.myform.stars.value = document.getElementById('demo').getAttribute('data-stars');
+                                        return true;
+                                    }
+
+                                </script>
+
+                            </div>
+                        </div>
+                        <div class="movie-tabs">
+                            <div>
+                                <iframe class="item-video" width="100%" height="400vh"
+                                        data-src="{{ data.movie.12 }}" allowfullscreen></iframe>
+                            </div>
+                            <div class="tabs">
+                                <ul class="tab-links tabs-mv">
+                                    <li class="active"><a href="#overview">Overview</a></li>
+                                    <li><a href="#reviews"> Reviews</a></li>
+                                    <li><a href="#cast"> Cast & Crew </a></li>
+                                </ul>
+
+                                <br><br>
+                                <div class="tab-content">
+                                    <div id="overview" class="tab active">
+                                        <div class="row">
+                                            <div class="col-md-8 col-sm-12 col-xs-12">
+                                                <div class="title-hd-sm">
+                                                    <h4>Description</h4>
+                                                </div>
+                                                <p>{{ data.movie.4 }}</p>
+                                                <div class="title-hd-sm">
+                                                    <h4>reviews</h4>
+                                                    <a href="#reviews" class="time">See All {{ reviews|length }} Reviews
+                                                        <i
+                                                                class="ion-ios-arrow-right"></i></a>
+                                                </div>
+                                                <!-- movie user review -->
+
+                                                <div class="mv-user-review-item">
+                                                    <h3>{{ reviews.0.1 }}</h3>
+                                                    <div class="no-star">
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star"></i>
+                                                        <i class="ion-android-star last"></i>
+                                                    </div>
+                                                    <p class="time">
+                                                        {{ reviews.0.3|date }} by <a href="#"> by {{ request.user }}</a>
+                                                    </p>
+                                                    <p>{{ reviews.0.2 }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4 col-xs-12 col-sm-12">
+                                                <div class="sb-it">
+                                                    <h6>Director: </h6>
+                                                    {% for i in data.director %}
+                                                        <p><a href="#">{{ i.5 }}</a></p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="sb-it">
+                                                    <h6>Writer: </h6>
+                                                    {% for i in data.writer %}
+                                                        <p><a href="#">{{ i.5 }}</a></p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="sb-it">
+                                                    <h6>Producer: </h6>
+                                                    {% for i in data.producer %}
+                                                        <p><a href="#">{{ i.5 }}</a></p>
+                                                    {% endfor %}
+                                                </div>
+                                                <div class="sb-it">
+                                                    <h6>Release Date:</h6>
+                                                    <p>{{ data.movie.2 }}</p>
+                                                </div>
+                                                <div class="sb-it">
+                                                    <h6>Run Time:</h6>
+                                                    <p>{{ data.movie.3|date:"i:s" }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div id="reviews" class="tab review">
+                                        <div class="row">
+                                            <div class="rv-hd">
+                                                <a href="#review_popup" class="redbtn">Write Review</a>
+                                                <div id="review_popup" class="modal-window">
+                                                    <div>
+                                                        <a href="#modal-close" class="redbtn">close &times;</a>
+                                                        <h1></h1>
+                                                        <form method=post
+                                                              action="{% url 'Movie:single_movie' data.movie.0 %}">
+                                                            {% csrf_token %}
+                                                            <label>Title:</label>
+                                                            {{ reviewform.Title }}
+                                                            <label>Review:</label>
+                                                            {{ reviewform.Statement }}
+                                                            <button type="submit">Submit</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% for rev in reviews %}
+                                                <div class="mv-user-review-item">
+                                                    <div class="user-infor">
+                                                        <img src="/Media/{{ user.profile.profile_picture }}" alt="">
+                                                        <div>
+                                                            <h3>{{ rev.1 }}</h3>
+                                                            <div class="no-star">
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star"></i>
+                                                                <i class="ion-android-star last"></i>
+                                                            </div>
+                                                            <p class="time">
+                                                                {{ rev.4|date }} by <a href="#">
+                                                                {{ user.username }}</a>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                    <p>{{ rev.1 }}</p>
+                                                </div>
+                                            {% empty %}
+                                                <div>Nothing to show!!</div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div id="cast" class="tab">
+                                        <div class="row">
+                                            <h3>Cast & Crew of</h3>
+                                            <h2>Avengers: Age of Ultron</h2>
+                                            <!-- //== -->
+                                            <div class="title-hd-sm">
+                                                <h4>Directors & Credit Writers</h4>
+                                            </div>
+                                            <div class="mvcast-item">
+                                                <div class="cast-it">
+                                                    {% for i in data.director %}
+                                                        <div class="cast-left">
+                                                            <h4>JW</h4>
+                                                            <a href="#">{{ i.5 }}</a>
+                                                        </div>
+                                                    {% endfor %}
+                                                    <p>... Director</p>
+                                                </div>
+                                            </div>
+                                            <!-- //== -->
+                                            <div class="title-hd-sm">
+                                                <h4>Directors & Credit Writers</h4>
+                                            </div>
+                                            <div class="mvcast-item">
+                                                <div class="cast-it">
+                                                    <div class="cast-left">
+                                                        <h4>SL</h4>
+                                                        <a href="#">Stan Lee</a>
+                                                    </div>
+                                                    <p>... (based on Marvel comics)</p>
+                                                </div>
+
+                                            </div>
+                                            <!-- //== -->
+                                            <div class="title-hd-sm">
+                                                <h4>Cast</h4>
+                                            </div>
+                                            <div class="mvcast-item">
+                                                <div class="cast-it">
+                                                    <div class="cast-left">
+                                                        <img src="images/uploads/cast1.jpg" alt="">
+                                                        <a href="#">Robert Downey Jr.</a>
+                                                    </div>
+                                                    <p>... Robert Downey Jr.</p>
+                                                </div>
+                                            </div>
+                                            <!-- //== -->
+                                            <div class="title-hd-sm">
+                                                <h4>Produced by</h4>
+                                            </div>
+                                            <div class="mvcast-item">
+                                                <div class="cast-it">
+                                                    <div class="cast-left">
+                                                        <h4>VA</h4>
+                                                        <a href="#">Victoria Alonso</a>
+                                                    </div>
+                                                    <p>... executive producer</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+          $(".watch_add").click(function () {
+              $.ajax({
+                  url: window.location.href,
+                  type: "post", // or "get"
+                  data:'addw',
+              });
+          });
+      });
+      $(function() {
+        $(".fav_add").click(function() {
+            $.ajax({
+                  url: window.location.href,
+                  type: "post", // or "get"
+                  data:'addf',
+              });
+        });
+      });
+      $(function() {
+        $(".watch_del").click(function() {
+            $.ajax({
+                  url: window.location.href,
+                  type: "post", // or "get"
+                  data:'delw',
+              });
+        });
+      });
+      $(function () {
+          $(".fav_del").click(function () {
+              $.ajax({
+                  url: window.location.href,
+                  type: "post", // or "get"
+                  data:'delf',
+              });
+          });
+      });
+    </script>
+
+
+{% endblock %}

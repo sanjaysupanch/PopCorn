@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" class="no-js">
+
+<head>
+    <title>PopCorn</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="profile" href="#">
+
+    <!--Google Font-->
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600'/>
+    <!-- Mobile specific meta -->
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone-no">
+
+    <!-- CSS files -->
+    <link rel="stylesheet" href="{% static 'css/plugins.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block head %}
+    {% endblock %}
+
+</head>
+<body>
+<!-- BEGIN | Header -->
+<header class="ht-header">
+    <div style="margin-left: 5%;margin-right: 5%;">
+        <nav class="navbar navbar-default navbar-custom">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header logo">
+                <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <div id="nav-icon1">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <a href="{% url 'Movie:home' %}"><img class="logo" src="{% static 'images/logo1.png' %}" alt=""
+                                                      width="89"
+                                                      height="18"></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav flex-child-menu menu-left">
+                    <li><a class="btn btn-default" href="{% url 'Movie:movielist' 'top_rated' '1' %}">Movies</a></li>
+                    <li><a class="btn btn-default" href="{% url 'Movie:tvseries' 'top_rated' %}">TV Series</a></li>
+                    <li><a class="btn btn-default" href="{% url 'Celebrities:celeb' 'top_rated' %}">Celebrities</a></li>
+                </ul>
+                <ul class="nav navbar-nav flex-child-menu menu-right">
+                    {% if user.is_authenticated %}
+                        <li class="dropdown first">
+                            <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                                {{ user.username }}<i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </a>
+                            <ul class="dropdown-menu level1">
+                                <li><a href="{% url 'registration:favorites' %}">Favourites </a></li>
+                                <li><a href="{% url 'registration:watchlist' %}">Watchlist</a></li>
+                                <li><a href="{% url 'registration:rated' %}">Your Ratings</a></li>
+                                <li><a href="{% url 'registration:recommend' %}">Recommendations</a></li>
+                                <li><a href="{% url 'registration:profile' %}">Profile</a></li>
+                            </ul>
+                        </li>
+
+                        <li class="btn"><a href="{% url 'logout' %}">LOG Out</a></li>
+                    {% else %}
+                        <li class="btn"><a href="{% url 'login' %}">LOG In</a></li>
+                        <li class="btn"><a href="{% url 'registration:register' %}">sign up</a></li>
+                    {% endif %}
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <!-- top search form -->
+
+        <form method='post' action="{% url 'Movie:search' %}">
+            {% csrf_token %}
+            <div class="top-search">
+                {{ searchform.select }}
+                {{ searchform.search }}
+                {#                <button type="submit"><i class="fa fa-search"></i></button>#}
+            </div>
+        </form>
+
+    </div>
+</header>
+
+{% block body %}
+{% endblock %}
+
+<!-- footer section-->
+<footer class="ht-footer">
+    <div class="container">
+        <div class="flex-parent-ft">
+            <div class="flex-child-ft item1">
+                <a href="index.html"><img class="logo" src="images/logo1.png" alt=""></a>
+                <p>IIIT Boys Hostel(BH2)<br>
+                    Sri City, Andhra Pradesh,<br>
+                    India
+                </p>
+                <p>Call us: <a href="#">(+91)7295908780</a></p>
+            </div>
+            <div class="flex-child-ft item2">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">User Guide</a></li>
+                </ul>
+            </div>
+            <div class="flex-child-ft item5">
+                <h4>Newsletter</h4>
+                <p>Subscribe to our newsletter system now <br> to get latest news from us.</p>
+                <form action="#">
+                    <input type="text" placeholder="Enter your email...">
+                </form>
+                <a href="#" class="btn">Subscribe now <i class="ion-ios-arrow-forward"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="ft-copyright">
+        <div class="ft-left">
+            <p>© 2019 PopCorn Inc. All Rights Reserved</p>
+        </div>
+        <div class="backtotop">
+            <p><a href="#" id="back-to-top">Back to top <i class="ion-ios-arrow-thin-up"></i></a></p>
+        </div>
+    </div>
+</footer>
+<!-- end of footer section-->
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/plugins2.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+</body>
+
+</html>
